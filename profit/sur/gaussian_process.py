@@ -2,7 +2,7 @@ r"""This module contains the backends for various Gaussian Process surrogate mod
 
 Gaussian Processes (GPs) are a generalization of Gaussian Distributions which are described by mean- and covariance
 functions.
-They can be used as as a non-parametric, supervised machine-learning technique for regression and classification.
+They can be used as a non-parametric, supervised machine-learning technique for regression and classification.
 The advantages of GPs over other machine-learning techniques such as Artificial Neural Networks is the consistent,
 analytic mathematical derivation within probability-theory and therefore their intrinsic uncertainty-quantification of
 the predictions by means of the covariance function. This makes the results of GP fits intuitive to interpret.
