@@ -282,6 +282,6 @@ def chaospy2D():
     ax.plot_trisurf(Xpredict[:, 0], Xpredict[:, 1], Ypredict - 2 * Ystd, color='grey', alpha=0.6)
     ax.set(xlabel='x1', ylabel='x2', zlabel='y(x1, x2)',
            title=title)
-    plt.savefig(file_location)
+    # plt.savefig(file_location)
 
 chaospy2D()
