@@ -49,7 +49,7 @@ ytrain = np.array(
 # ============================ Sklearn linear regression 2D ============================== #
 # ======================================================================================== #
 
-from profit.sur.linear_regression import SklearnLinReg
+from profit.sur.linreg.linear_regression import SklearnLinReg
 
 model = SklearnLinReg()
 model.set_transformation({'polynomial': 4})

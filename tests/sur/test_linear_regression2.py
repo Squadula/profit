@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import chaospy
-from profit.sur.linear_regression import ChaospyLinReg
+from profit.sur.linreg import ChaospyLinReg
+from profit.sur.linreg import CustomLinReg
 
 # training data
 Xtrain = np.array(
@@ -42,46 +42,59 @@ xpred = np.array([np.linspace(minv, maxv, n) for minv, maxv, n in
 Xpred = np.hstack(
     [xx.flatten().reshape([-1, 1]) for xx in np.meshgrid(*xpred)])
 
-sigma_n, sigma_p = 0.05, 0.5
-
-def plot(Xtrain, ytrain, Xpred, ymean, ycov, title):
+def plot(Xtrain, ytrain, Xpred, ymean, ycov, title, model):
     ystd = np.sqrt(np.diag(ycov))
     # plot
-    ax = plt.axes(projection='3d')
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
     ax.scatter(Xtrain[:, 0], Xtrain[:, 1], ytrain, color='black', marker='x', alpha=0.8)
     ax.plot_trisurf(Xpred[:, 0], Xpred[:, 1], ymean, color='red', alpha=0.8)
     ax.plot_trisurf(Xpred[:, 0], Xpred[:, 1], ymean + 2 * ystd, color='grey', alpha=0.6)
     ax.plot_trisurf(Xpred[:, 0], Xpred[:, 1], ymean - 2 * ystd, color='grey', alpha=0.6)
     ax.set(xlabel='x1', ylabel='x2', zlabel='y(x1, x2)',
            title=title)
-    plt.savefig('figures/ChaospyLinRegLegendre')
+    fig.savefig('figures/ChaospyLinReg' + model)
 
-# ============================================================================ #
-# ===================================== ChaospyLinReg ======================== #
-# ============================================================================ #
+# =============================================================== #
+# ======================== ChaospyLinReg ======================== #
+# =============================================================== #
 
-model = ChaospyLinReg('legendre')
+sigma_n, sigma_p = 0.05, 5
+model_name = 'monomial'
+# legendre polynomial kwargs:
+# kwargs = {
+#     'lower': -1,
+#     'upper': 1
+# }
+kwargs = {
+}
+model = ChaospyLinReg(model_name, 3, **kwargs)
 model.train(Xtrain, ytrain, sigma_n, sigma_p)
 ymean, ycov = model.predict(Xpred)
-plot(Xtrain, ytrain, Xpred, ymean.flatten(), ycov, 'Linear Regression Legendre')
+
+plot(Xtrain, ytrain, Xpred, ymean.flatten(), ycov,
+     'Linear Regression using ' + model_name + ' polynomials', model_name)
 
 
+# ============================================================== #
+# ======================== CustomLinReg ======================== #
+# ============================================================== #
 
-# LinReg = ChaospyLinReg()
-# LinReg.train(xtrain, ytrain)
-# LinReg.predict()
-#
-# m = 2
-# dim = 2
-# # vars = chaospy.variable(dim)
-# vars = ['q' + str(i) for i in range(dim)]
-# Phi = chaospy.expansion.legendre(m, lower=0.0, upper=1.0)
-#
-# for var in vars[1:]:
-#     poly = chaospy.expansion.legendre(m, lower=0.0, upper=1.0)
-#     poly.names = (var, )
-#     Phi = chaospy.outer(Phi, poly).flatten()
-#
-# Phi = Phi(xtrain[:, 0], xtrain[:, 1])
-#
-# print(Phi)
+def RBF2D(x, mu, s):
+    return np.array([[np.exp(-np.sqrt(np.sum((xi - mui)**2)) / (2 * s ** 2)) for mui in mu] for xi in x]).T
+
+sigma_n, sigma_p = 0.05, 0.5
+np.random.seed(1234)
+mutest = np.random.uniform(0, 1, [10, 2])
+
+model_name = 'RBF'
+kwargs = {
+    'mu': mutest,
+    's': 0.7
+}
+model = CustomLinReg(RBF2D, **kwargs)
+model.train(Xtrain, ytrain, sigma_n, sigma_p)
+ymean, ycov = model.predict(Xpred)
+
+plot(Xtrain, ytrain, Xpred, ymean.flatten(), ycov,
+     'Linear Regression using ' + model_name, model_name)
