@@ -22,7 +22,7 @@ class LinearRegression(Surrogate):
         self.Ndim = None    # number of data points
         self.wmean = None   # MAP features
         self.wcov = None    # covariance matrix of features
-        # TODO: add option to pass function transformer
+        # TODO: pass general function transformer
 
     def pre_train(self, X, y):
         """

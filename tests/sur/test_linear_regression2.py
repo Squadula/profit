@@ -60,15 +60,17 @@ def plot(Xtrain, ytrain, Xpred, ymean, ycov, title, model):
 # =============================================================== #
 
 sigma_n, sigma_p = 0.05, 5
-model_name = 'monomial'
+
+model_name = 'legendre'
 # legendre polynomial kwargs:
-# kwargs = {
-#     'lower': -1,
-#     'upper': 1
-# }
 kwargs = {
+    'order': 3,
+    'lower': -1,
+    'upper': 1
 }
-model = ChaospyLinReg(model_name, 3, **kwargs)
+# kwargs = {
+# }
+model = ChaospyLinReg(model_name, **kwargs)
 model.train(Xtrain, ytrain, sigma_n, sigma_p)
 ymean, ycov = model.predict(Xpred)
 
@@ -85,12 +87,12 @@ def RBF2D(x, mu, s):
 
 sigma_n, sigma_p = 0.05, 0.5
 np.random.seed(1234)
-mutest = np.random.uniform(0, 1, [10, 2])
+mutest = np.random.uniform(0, 1, [13, 2])
 
 model_name = 'RBF'
 kwargs = {
     'mu': mutest,
-    's': 0.7
+    's': 0.3
 }
 model = CustomLinReg(RBF2D, **kwargs)
 model.train(Xtrain, ytrain, sigma_n, sigma_p)
