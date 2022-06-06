@@ -100,3 +100,22 @@ ymean, ycov = model.predict(Xpred)
 
 plot(Xtrain, ytrain, Xpred, ymean.flatten(), ycov,
      'Linear Regression using ' + model_name, model_name)
+
+# ============================================================== #
+# ======================== Test config ======================== #
+# ============================================================== #
+
+# from profit.util.file_handler import FileHandler
+#
+# filepath = "test.hdf5"
+# FileHandler.save(filepath, kwargs)
+# sur_dict = FileHandler.load(filepath, as_type='dict')
+# print(sur_dict)
+
+def func(x):
+    return np.cos(10 * x) + x
+
+np.random.seed(1234)
+N = 10
+xtrain = np.random.uniform(0, 1, N)
+print(xtrain)
